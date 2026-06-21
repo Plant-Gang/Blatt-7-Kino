@@ -7,6 +7,8 @@ import de.uni_hamburg.informatik.swt.se2.kino.ui.datumsauswaehler.DatumAuswaehlC
 import de.uni_hamburg.informatik.swt.se2.kino.ui.platzverkauf.PlatzVerkaufsController;
 import de.uni_hamburg.informatik.swt.se2.kino.ui.vorstellungsauswaehler.VorstellungsAuswaehlController;
 import de.uni_hamburg.informatik.swt.se2.kino.wertobjekte.Datum;
+import observers.Observable;
+import observers.Observer;
 
 /**
  * Das Kassenmodul. Mit diesem Modul kann die Benutzerin oder der Benutzer
@@ -16,7 +18,7 @@ import de.uni_hamburg.informatik.swt.se2.kino.wertobjekte.Datum;
  * @author SE2-Team
  * @version SoSe 2024
  */
-public class KassenController
+public class KassenController implements Observer
 {
     // Die Entität, die durch dieses UI-Modul verwaltet wird.
     private Kino _kino;
@@ -56,6 +58,9 @@ public class KassenController
         setzeTagesplanFuerAusgewaehltesDatum();
         setzeAusgewaehlteVorstellung();
 
+        _datumAuswaehlController.addObserver(this);
+        _vorstellungAuswaehlController.addObserver(this);
+
         _view.zeigeFenster();
     }
 
@@ -64,7 +69,8 @@ public class KassenController
      */
     private void registriereUIAktionen()
     {
-        _view.getBeendenButton().addActionListener(e -> reagiereAufBeendenButton());
+        _view.getBeendenButton()
+            .addActionListener(e -> reagiereAufBeendenButton());
     }
 
     /**
@@ -108,5 +114,18 @@ public class KassenController
     private Vorstellung getAusgewaehlteVorstellung()
     {
         return _vorstellungAuswaehlController.getAusgewaehlteVorstellung();
+    }
+
+    @Override
+    public void listen(Observable observable)
+    {
+        if (observable instanceof VorstellungsAuswaehlController)
+        {
+            setzeAusgewaehlteVorstellung();
+        }
+        else if (observable instanceof DatumAuswaehlController)
+        {
+            setzeTagesplanFuerAusgewaehltesDatum();
+        }
     }
 }
