@@ -1,5 +1,8 @@
 package observers;
 
+/**
+ * An Observer that asks Observables to be notified when an event occurs
+ */
 public interface Observer
 {
     /**
