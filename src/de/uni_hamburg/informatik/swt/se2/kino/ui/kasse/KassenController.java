@@ -119,11 +119,11 @@ public class KassenController implements Observer
     @Override
     public void listen(Observable observable)
     {
-        if (observable instanceof VorstellungsAuswaehlController)
+        if (observable == _vorstellungAuswaehlController)
         {
             setzeAusgewaehlteVorstellung();
         }
-        else if (observable instanceof DatumAuswaehlController)
+        else
         {
             setzeTagesplanFuerAusgewaehltesDatum();
         }
